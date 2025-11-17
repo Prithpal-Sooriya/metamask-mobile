@@ -124,6 +124,29 @@ describe('NotificationsService - getBlockedNotifications', () => {
   });
 });
 
+describe('getPushPermission', () => {
+  const arrangeMocks = () => {
+    const mockGetAllPermissions = jest.spyOn(
+      NotificationService,
+      'getAllPermissions',
+    );
+    return { mockGetAllPermissions };
+  };
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('returns the push permission from getAllPermissions', async () => {
+    const mocks = arrangeMocks();
+    const { getPushPermission } = require('./NotificationService');
+    mocks.mockGetAllPermissions.mockResolvedValue({ permission: 'authorized' });
+    expect(await getPushPermission()).toBe('authorized');
+    mocks.mockGetAllPermissions.mockResolvedValue({ permission: 'denied' });
+    expect(await getPushPermission()).toBe('denied');
+  });
+});
+
 describe('NotificationService - getAllPermissions', () => {
   const arrangeMocks = () => {
     const mockCreateChannel = jest
